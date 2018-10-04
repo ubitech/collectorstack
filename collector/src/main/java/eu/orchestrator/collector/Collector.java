@@ -45,9 +45,29 @@ public class Collector {
         return collector_instance;
     }//EoM
 
-    public void logMetric(String metricid, String dimensionid, int value) {
+    public void logMetric(String dimensionid, int value) {
+        int pivot = dimensionid.lastIndexOf(".");
+        String metricid = dimensionid.substring(0, pivot);
+        String dname = dimensionid.substring(pivot + 1, dimensionid.length());
+        logger.info("metric: "+metricid + " dim:" + dname);
+        
+        Metric metric = mmap.get(metricid);
+        logger.info(metric.toString());
+        Dimension dim = metric.getDimensions().get(dname);
+
         Measurement measurement = new Measurement(metricid, dimensionid, value);
+        measurement.setContent(genMeasurement(metric, dim, value));
         mqueue.add(measurement);
+    }//EoM
+
+    private static String genMeasurement(Metric metric, Dimension dimension, int value) { 
+        String str = "\""+metric.getMetricname()+"."+metric.getFamily()+"\": {"
+                + "    \"options\": [\""+metric.getMetricname()+"\", \""+metric.getTitle()+"\", \""+metric.getUnit()+"\", \""+metric.getFamily()+"\", \""+metric.getContext()+"\", \""+metric.getCharttype()+"\"],"
+                + "    \"lines\": ["
+                + "      [\""+metric.getMetricname()+"."+metric.getFamily()+"."+dimension.getDimensionname()+"\", \""+dimension.getDimensionname()+"\", \""+dimension.getAlgorithm()+"\", \""+dimension.getMultiplier()+"\", \""+dimension.getDivisor()+"\", \""+value+"\" ]"
+                + "    ]"
+                + "  }";
+        return str;
     }//EoM
 
     public String registerMetric(String metricname, String title, String unit, String family, String context, ChartType charttype) {
@@ -71,8 +91,8 @@ public class Collector {
     public String registerDimensionToMetric(String midentifier, String dimensionname) {
         Metric metric = mmap.get(midentifier);
         Dimension dim = new Dimension(dimensionname);
-        String dimid = midentifier + "." + dimensionname;
-        metric.getDimensions().put(dimid, dim);
+        metric.getDimensions().put(dimensionname, dim);
+        String dimid = midentifier + "." + dimensionname;        
         return dimid;
     }//EoM
 

@@ -9,7 +9,8 @@ public class Measurement {
     private String dimensionid;
     private int value;
     private long timestamp = System.currentTimeMillis();
- 
+    private String content;
+    
     public Measurement(String metricid, String dimensionid, int value) {
         this.metricid = metricid;
         this.dimensionid = dimensionid;
@@ -48,9 +49,18 @@ public class Measurement {
         this.timestamp = timestamp;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    
     @Override
     public String toString() {
-        return "Measurement{" + "metricid=" + metricid + ", dimensionid=" + dimensionid + ", value=" + value + ", timestamp=" + timestamp + '}';
+        return content;
     }    
     
 }//EoC

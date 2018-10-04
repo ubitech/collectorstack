@@ -17,13 +17,15 @@ public class SampleNativeApp {
     public static void main(String[] args) throws InterruptedException {
 
         //collector.logMetric("kostas", "aaa");
-        String metricid = collector.registerMetric("cpu.utilization", "title1", "%", "user", "context1", ChartType.LINE);
+        String metricid = collector.registerMetric("cpu.utilization", "title1", "%", "user", "context1", ChartType.stacked);
+        String metricid2 = collector.registerMetric("cpu.utilization2", "title1", "%", "user", "context1", ChartType.stacked);
         String dimensionid = collector.registerDimensionToMetric(metricid, "2xx");
-        String dimensionid2 = collector.registerDimensionToMetric(metricid, "3xx");
+        String dimensionid2 = collector.registerDimensionToMetric(metricid2, "3xx");
         collector.removeDimensionFromMetric(metricid, dimensionid2);
         logger.info(collector.getMetric(metricid).toString());
 
-        collector.logMetric(metricid, dimensionid, 5);
+        collector.logMetric(dimensionid, 5);
+        collector.logMetric(dimensionid2, 6);
 
 //        for (int i = 0; i < 10; i++) {
 //            MetricEmitter emitter = new MetricEmitter(""+i);

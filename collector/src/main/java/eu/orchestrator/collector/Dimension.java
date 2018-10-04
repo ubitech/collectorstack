@@ -14,7 +14,7 @@ public class Dimension {
 
     public Dimension(String dimensionname) {
         this.dimensionname = dimensionname;
-        this.algorithm = AlgorithmType.ABSOLUTE;
+        this.algorithm = AlgorithmType.absolute;
         this.multiplier = 1;
         this.divisor = 1;   
     }

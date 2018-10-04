@@ -33,13 +33,17 @@ public class ReportingServer implements Runnable {
                     Socket socket = listener.accept();
                     try {
                         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                        String reportingstr ="";
+                        String reportingstr = "{";
                         //logger.info("Queue size" + mqueue.size());
+                        int index = 0;
                         while (!mqueue.isEmpty()) {
                             Measurement m = mqueue.take();
                             //logger.info("De-Queueing " + m);
-                            reportingstr+=m.toString() + " ";
+                            reportingstr += (index == 0) ? (m.toString() + " ") : (" , " + m.toString() + " ");
+                            index++;
                         }//Dequeue
+                        reportingstr += "}";
+
                         out.println(reportingstr);
                         reportingstr = "";
                     } catch (InterruptedException ex) {
