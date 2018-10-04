@@ -5,36 +5,52 @@ package eu.orchestrator.collector;
  * @author Panagiotis Gouvas
  */
 public class Measurement {
-
-    private String metricname;
-    private String value;
-
-    public Measurement(String metricname, String value) {
-        this.metricname = metricname;
+    private String metricid;
+    private String dimensionid;
+    private int value;
+    private long timestamp = System.currentTimeMillis();
+ 
+    public Measurement(String metricid, String dimensionid, int value) {
+        this.metricid = metricid;
+        this.dimensionid = dimensionid;
         this.value = value;
-    }    
-    
-    public String getMetricname() {
-        return metricname;
     }
 
-    public void setMetricname(String metricname) {
-        this.metricname = metricname;
+    public String getMetricid() {
+        return metricid;
     }
 
-    public String getValue() {
+    public void setMetricid(String metricid) {
+        this.metricid = metricid;
+    }
+
+    public String getDimensionid() {
+        return dimensionid;
+    }
+
+    public void setDimensionid(String dimensionid) {
+        this.dimensionid = dimensionid;
+    }
+
+    public int getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(int value) {
         this.value = value;
-    }        
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
     @Override
     public String toString() {
-        return "Measurement{" + "metricname=" + metricname + ", value=" + value + '}';
-    }
+        return "Measurement{" + "metricid=" + metricid + ", dimensionid=" + dimensionid + ", value=" + value + ", timestamp=" + timestamp + '}';
+    }    
     
-    
-    
-}//EoM
+}//EoC

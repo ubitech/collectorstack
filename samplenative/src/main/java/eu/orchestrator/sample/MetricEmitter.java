@@ -14,7 +14,7 @@ public class MetricEmitter implements Runnable {
     @Override
     public void run() {
         for (int i = 0; i < 10; i++) {
-            SampleNativeApp.collector.logMetric("metric"+name, "10" + i);
+            //SampleNativeApp.collector.logMetric("metric"+name, "10" + i);
             
             logger.info("Thread "+name+"added metric");
             try {
