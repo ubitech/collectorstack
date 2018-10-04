@@ -29,6 +29,7 @@
         <module>collector</module>
         <!--Short description of module-->
         <module>samplenative</module>
+        <module>samplespringboot</module>        
     </modules>
 
 </project>

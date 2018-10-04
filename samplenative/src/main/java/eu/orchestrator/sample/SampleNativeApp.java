@@ -19,7 +19,10 @@ public class SampleNativeApp {
         //collector.logMetric("kostas", "aaa");
         String metricid = collector.registerMetric("cpu.utilization", "title1", "%", "user", "context1", ChartType.LINE);
         String dimensionid = collector.registerDimensionToMetric(metricid, "2xx");
-        
+        String dimensionid2 = collector.registerDimensionToMetric(metricid, "3xx");
+        collector.removeDimensionFromMetric(metricid, dimensionid2);
+        logger.info(collector.getMetric(metricid).toString());
+
         collector.logMetric(metricid, dimensionid, 5);
 
 //        for (int i = 0; i < 10; i++) {
@@ -27,7 +30,5 @@ public class SampleNativeApp {
 //            Thread t = new Thread(emitter);
 //            t.start();
 //        }//for        
-
-
     }//EoM
 }//EoC

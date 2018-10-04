@@ -1,5 +1,7 @@
 package eu.orchestrator.collector;
 
+import java.util.Objects;
+
 /**
  *
  * @author Panagiotis Gouvas
@@ -63,6 +65,33 @@ public class Dimension {
         this.divisor = divisor;
     }
 
-    
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Dimension other = (Dimension) obj;
+        if (!Objects.equals(this.dimensionname, other.dimensionname)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Dimension{" + "dimensionname=" + dimensionname + ", algorithm=" + algorithm + ", multiplier=" + multiplier + ", divisor=" + divisor + '}';
+    }    
     
 }//EoC

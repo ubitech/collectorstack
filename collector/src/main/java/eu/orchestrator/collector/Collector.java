@@ -17,14 +17,14 @@ public class Collector {
     private static Collector collector_instance = null;
     private static int defaultport = 9090;
     //synchronized
-    private BlockingQueue<Measurement>  mqueue = new LinkedBlockingQueue<>();
-    private ConcurrentHashMap<String,Metric> mmap = new ConcurrentHashMap<>();
-    
+    private BlockingQueue<Measurement> mqueue = new LinkedBlockingQueue<>();
+    private ConcurrentHashMap<String, Metric> mmap = new ConcurrentHashMap<>();
+
     private ReportingServer rserver;
-    
+
     public Collector(int port) {
         this.defaultport = port;
-        rserver = new ReportingServer(port,mqueue);
+        rserver = new ReportingServer(port, mqueue);
         Thread rthread = new Thread(rserver);
         rthread.setPriority(Thread.MIN_PRIORITY);
         rthread.start();
@@ -37,6 +37,7 @@ public class Collector {
         }
         return collector_instance;
     }//EoM    
+
     public static Collector getInstance(int port) {
         if (collector_instance == null) {
             collector_instance = new Collector(port);
@@ -44,42 +45,40 @@ public class Collector {
         return collector_instance;
     }//EoM
 
-    public void logMetric(String metricid,String dimensionid,int value) {
+    public void logMetric(String metricid, String dimensionid, int value) {
         Measurement measurement = new Measurement(metricid, dimensionid, value);
         mqueue.add(measurement);
     }//EoM
 
-    public String registerMetric(String metricname, String title, String unit, String family, String context, ChartType charttype){        
-        Metric metric = new Metric(metricname,  title,  unit,  family,  context, charttype);
-        String midentifier = metricname+"."+family;
-        if (!mmap.containsKey(midentifier)){
+    public String registerMetric(String metricname, String title, String unit, String family, String context, ChartType charttype) {
+        Metric metric = new Metric(metricname, title, unit, family, context, charttype);
+        String midentifier = metricname + "." + family;
+        if (!mmap.containsKey(midentifier)) {
             mmap.put(midentifier, metric);
         }
         return midentifier;
     }//EoM
-    
-    public Metric getMetric(String metricname, String family){
-        String midentifier = metricname+"."+family;
+
+    public Metric getMetric(String midentifier) {
         return mmap.get(midentifier);
     }//EoM
-    
-    public void deleteMetric(Metric metric){
-        String midentifier = metric.getMetricname()+"."+metric.getFamily();
+
+    public void removeMetric(Metric metric) {
+        String midentifier = metric.getMetricname() + "." + metric.getFamily();
         mmap.remove(midentifier);
     }//EoM
-    
-    public String registerDimensionToMetric(String midentifier, String dimensionname){
+
+    public String registerDimensionToMetric(String midentifier, String dimensionname) {
         Metric metric = mmap.get(midentifier);
         Dimension dim = new Dimension(dimensionname);
-        if (!metric.getDimensions().contains(dim)) metric.getDimensions().add(dim);
-        return midentifier+"."+dimensionname;
+        String dimid = midentifier + "." + dimensionname;
+        metric.getDimensions().put(dimid, dim);
+        return dimid;
     }//EoM
 
-    public void deleteDimensionFromMetric(String midentifier, String dimensionname){
+    public void removeDimensionFromMetric(String midentifier, String dimid) {
         Metric metric = mmap.get(midentifier);
-        Dimension dim = new Dimension(dimensionname);
-        if (metric.getDimensions().contains(dim)) metric.getDimensions().remove(dim);
+        metric.getDimensions().remove(dimid);
     }//EoM
-    
-    
+
 }//EoC

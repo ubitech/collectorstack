@@ -1,7 +1,9 @@
 package eu.orchestrator.collector;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -15,7 +17,7 @@ public class Metric {
     private String family;
     private String context;
     private ChartType charttype;               //line, area or stacked
-    private List<Dimension> dimensions;
+    private Map<String, Dimension> dimensions;
 
     public Metric(String metricname, String title, String unit, String family, String context, ChartType charttype) {
         this.metricname = metricname;
@@ -24,17 +26,15 @@ public class Metric {
         this.family = family;
         this.context = context;
         this.charttype = charttype;
-        dimensions = new ArrayList<>();
+        dimensions = new HashMap<>();
     }//EoC
 
     public void addDimension(Dimension dimension) {
-        if (!dimensions.contains(dimension)) {
-            dimensions.add(dimension);
-        }
+        dimensions.put(dimension.getDimensionname(), dimension);
     }
 
     public void removeDimension(Dimension dimension) {
-        dimensions.remove(dimension);
+        dimensions.remove(dimension.getDimensionname());
     }
 
     public String getMetricname() {
@@ -85,12 +85,20 @@ public class Metric {
         this.charttype = charttype;
     }
 
-    public List<Dimension> getDimensions() {
+    public Map<String, Dimension> getDimensions() {
         return dimensions;
     }
 
-    public void setDimensions(List<Dimension> dimensions) {
+    public void setDimensions(Map<String, Dimension> dimensions) {
         this.dimensions = dimensions;
     }
 
+
+    @Override
+    public String toString() {
+        return "Metric{" + "metricname=" + metricname + ", title=" + title + ", unit=" + unit + ", family=" + family + ", context=" + context + ", charttype=" + charttype + ", dimensions=" + dimensions + '}';
+    }
+
+    
+    
 }//EoC
