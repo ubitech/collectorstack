@@ -30,12 +30,12 @@ public class SampleApp {
     public void init() {
         String metricid = collector.registerMetric("cpu.utilization", "title1", "%", "user", "context1", ChartType.stacked);
         String dimensionid = collector.registerDimensionToMetric(metricid, "2xx");
-        String dimensionid2 = collector.registerDimensionToMetric(metricid, "3xx");
-        collector.removeDimensionFromMetric(metricid, dimensionid2);
+//        String dimensionid2 = collector.registerDimensionToMetric(metricid, "3xx");
+//        collector.removeDimensionFromMetric(metricid, dimensionid2);
         logger.info(collector.getMetric(metricid).toString());
 
         collector.logMetric(dimensionid, 5);
-        collector.logMetric(dimensionid, 6);        
+//        collector.logMetric(dimensionid, 6);        
     }//EoM    
     
 }//EoC

@@ -64,7 +64,7 @@ public class Collector {
         String str = "\""+metric.getMetricname()+"."+metric.getFamily()+"\": {"
                 + "    \"options\": [\""+metric.getMetricname()+"\", \""+metric.getTitle()+"\", \""+metric.getUnit()+"\", \""+metric.getFamily()+"\", \""+metric.getContext()+"\", \""+metric.getCharttype()+"\"],"
                 + "    \"lines\": ["
-                + "      [\""+metric.getMetricname()+"."+metric.getFamily()+"."+dimension.getDimensionname()+"\", \""+dimension.getDimensionname()+"\", \""+dimension.getAlgorithm()+"\", \""+dimension.getMultiplier()+"\", \""+dimension.getDivisor()+"\", \""+value+"\" ]"
+                + "      [\""+metric.getMetricname()+"."+metric.getFamily()+"."+dimension.getDimensionname()+"\", \""+dimension.getDimensionname()+"\", \""+dimension.getAlgorithm()+"\", "+dimension.getMultiplier()+", "+dimension.getDivisor()+", "+value+" ]"
                 + "    ]"
                 + "  }";
         return str;
