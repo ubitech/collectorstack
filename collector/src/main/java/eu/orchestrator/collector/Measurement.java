@@ -7,11 +7,11 @@ package eu.orchestrator.collector;
 public class Measurement {
     private String metricid;
     private String dimensionid;
-    private int value;
+    private double value;
     private long timestamp = System.currentTimeMillis();
     private String content;
     
-    public Measurement(String metricid, String dimensionid, int value) {
+    public Measurement(String metricid, String dimensionid, double value) {
         this.metricid = metricid;
         this.dimensionid = dimensionid;
         this.value = value;
@@ -33,7 +33,7 @@ public class Measurement {
         this.dimensionid = dimensionid;
     }
 
-    public int getValue() {
+    public double getValue() {
         return value;
     }
 

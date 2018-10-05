@@ -45,7 +45,7 @@ public class Collector {
         return collector_instance;
     }//EoM
 
-    public void logMetric(String dimensionid, int value) {
+    public void logMetric(String dimensionid, double value) {
         int pivot = dimensionid.lastIndexOf(".");
         String metricid = dimensionid.substring(0, pivot);
         String dname = dimensionid.substring(pivot + 1, dimensionid.length());
@@ -60,7 +60,7 @@ public class Collector {
         mqueue.add(measurement);
     }//EoM
 
-    private static String genMeasurement(Metric metric, Dimension dimension, int value) { 
+    private static String genMeasurement(Metric metric, Dimension dimension, double value) {
         String str = "\""+metric.getMetricname()+"."+metric.getFamily()+"\": {"
                 + "    \"options\": [\""+metric.getMetricname()+"\", \""+metric.getTitle()+"\", \""+metric.getUnit()+"\", \""+metric.getFamily()+"\", \""+metric.getContext()+"\", \""+metric.getCharttype()+"\"],"
                 + "    \"lines\": ["
@@ -79,8 +79,8 @@ public class Collector {
         return midentifier;
     }//EoM
 
-    public Metric getMetric(String midentifier) {
-        return mmap.get(midentifier);
+    public Metric getMetric(String metricIdentifier) {
+        return mmap.get(metricIdentifier);
     }//EoM
 
     public void removeMetric(Metric metric) {
@@ -88,11 +88,11 @@ public class Collector {
         mmap.remove(midentifier);
     }//EoM
 
-    public String registerDimensionToMetric(String midentifier, String dimensionname) {
-        Metric metric = mmap.get(midentifier);
+    public String registerDimensionToMetric(String metricIdentifier, String dimensionname) {
+        Metric metric = mmap.get(metricIdentifier);
         Dimension dim = new Dimension(dimensionname);
         metric.getDimensions().put(dimensionname, dim);
-        String dimid = midentifier + "." + dimensionname;        
+        String dimid = metricIdentifier + "." + dimensionname;
         return dimid;
     }//EoM
 
@@ -101,4 +101,23 @@ public class Collector {
         metric.getDimensions().remove(dimid);
     }//EoM
 
+    public void logMetricWithDefaultDimension(String metricIndentifier, double value) {
+
+        String metricid = metricIndentifier;
+        Metric metric = mmap.get(metricid);
+
+        Dimension dim = null;
+        if (metric.getDimensions().containsKey("default")) {
+            dim = metric.getDimensions().get("default");
+        }else{
+            String dimensionid = registerDimensionToMetric(metricid,"default");
+            dim = metric.getDimensions().get("default");
+        }
+
+        logger.info(metric.toString());
+
+        Measurement measurement = new Measurement(metricid, dim.getDimensionname(), value);
+        measurement.setContent(genMeasurement(metric, dim, value));
+        mqueue.add(measurement);
+    }//EoM
 }//EoC
