@@ -16,7 +16,7 @@ public class CollectorClient {
     
     public static void main(String[] args) throws IOException {
         String serverAddress = "127.0.0.1";
-        Socket s = new Socket(serverAddress, 9090);
+        Socket s = new Socket(serverAddress, 9999);
         BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
         String answer = input.readLine();
         logger.info("Collected:\n" + answer);

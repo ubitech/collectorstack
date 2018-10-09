@@ -10,4 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class JCollector extends Collector {
     
+  public JCollector() {
+    super(9999);
+  }
+
 }
