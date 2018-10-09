@@ -8,7 +8,7 @@ import java.util.logging.Logger;
  *
  * @author Panagiotis Gouvas
  */
-public class SampleNativeApp {
+public class SampleNativeApp {  
 
     public static Collector collector = Collector.getInstance();
 
@@ -18,14 +18,19 @@ public class SampleNativeApp {
 
         //collector.logMetric("kostas", "aaa");
         String metricid = collector.registerMetric("cpu.utilization", "title1", "%", "user", "context1", ChartType.stacked);
-        String metricid2 = collector.registerMetric("cpu.utilization2", "title1", "%", "user", "context1", ChartType.stacked);
-        String dimensionid = collector.registerDimensionToMetric(metricid, "2xx");
-        String dimensionid2 = collector.registerDimensionToMetric(metricid2, "3xx");
-        collector.removeDimensionFromMetric(metricid, dimensionid2);
+        String metricid2 = collector.registerMetric("ram.utilization", "title1", "%", "user", "context1", ChartType.stacked);
+        String dimensionid11 = collector.registerDimensionToMetric(metricid, "1xx");
+        String dimensionid12 = collector.registerDimensionToMetric(metricid, "11x");
+        String dimensionid2 = collector.registerDimensionToMetric(metricid2, "2xx");
+//        collector.removeDimensionFromMetric(metricid, dimensionid2);
         logger.info(collector.getMetric(metricid).toString());
 
-        collector.logMetric(dimensionid, 5);
-        collector.logMetric(dimensionid2, 6);
+        collector.logMetric(dimensionid11, 5);
+        collector.logMetric(dimensionid11, 6);
+        collector.logMetric(dimensionid12, 7);
+        
+//        collector.logMetric(dimensionid, 6);
+        collector.logMetric(dimensionid2, 13);
 
 //        for (int i = 0; i < 10; i++) {
 //            MetricEmitter emitter = new MetricEmitter(""+i);

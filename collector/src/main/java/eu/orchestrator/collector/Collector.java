@@ -1,5 +1,6 @@
 package eu.orchestrator.collector;
 
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -17,10 +18,20 @@ public class Collector {
     private static Collector collector_instance = null;
     private static int defaultport = 9090;
     //synchronized
-    private BlockingQueue<Measurement> mqueue = new LinkedBlockingQueue<>();
-    private ConcurrentHashMap<String, Metric> mmap = new ConcurrentHashMap<>();
+
+    private Map<String, Metric> mmap = new ConcurrentHashMap<>();
+
+    private Map<Metric, Map<Dimension, Integer>> mqueue = new ConcurrentHashMap<>();
 
     private ReportingServer rserver;
+
+    public Collector() {
+
+        rserver = new ReportingServer(defaultport, mqueue);
+        Thread rthread = new Thread(rserver);
+        rthread.setPriority(Thread.MIN_PRIORITY);
+        rthread.start();
+    }//EoC    
 
     public Collector(int port) {
         this.defaultport = port;
@@ -49,26 +60,27 @@ public class Collector {
         int pivot = dimensionid.lastIndexOf(".");
         String metricid = dimensionid.substring(0, pivot);
         String dname = dimensionid.substring(pivot + 1, dimensionid.length());
-        logger.info("metric: "+metricid + " dim:" + dname);
-        
+        logger.info("metric: " + metricid + " dim:" + dname);
+
         Metric metric = mmap.get(metricid);
         logger.info(metric.toString());
         Dimension dim = metric.getDimensions().get(dname);
 
-        Measurement measurement = new Measurement(metricid, dimensionid, value);
-        measurement.setContent(genMeasurement(metric, dim, value));
-        mqueue.add(measurement);
+//        Measurement measurement = new Measurement(metricid, dimensionid, value);
+        //measurement.setContent(genMeasurement(metric, dim, value));
+        if (!mqueue.containsKey(metric)) {   //metric does not exist
+            Map<Dimension, Integer> valuemap = new ConcurrentHashMap<>();
+            valuemap.put(dim, value);
+            mqueue.put(metric, valuemap);
+        } else {//metric exists
+            Map<Dimension, Integer> valuemap = mqueue.get(metric);
+            valuemap.put(dim, value);   //always overwrite
+            mqueue.put(metric, valuemap);
+        }
+//        logger.info(mqueue.toString());
     }//EoM
 
-    private static String genMeasurement(Metric metric, Dimension dimension, int value) { 
-        String str = "\""+metric.getMetricname()+"."+metric.getFamily()+"\": {"
-                + "    \"options\": [\""+metric.getMetricname()+"\", \""+metric.getTitle()+"\", \""+metric.getUnit()+"\", \""+metric.getFamily()+"\", \""+metric.getContext()+"\", \""+metric.getCharttype()+"\"],"
-                + "    \"lines\": ["
-                + "      [\""+metric.getMetricname()+"."+metric.getFamily()+"."+dimension.getDimensionname()+"\", \""+dimension.getDimensionname()+"\", \""+dimension.getAlgorithm()+"\", "+dimension.getMultiplier()+", "+dimension.getDivisor()+", "+value+" ]"
-                + "    ]"
-                + "  }";
-        return str;
-    }//EoM
+
 
     public String registerMetric(String metricname, String title, String unit, String family, String context, ChartType charttype) {
         Metric metric = new Metric(metricname, title, unit, family, context, charttype);
@@ -92,7 +104,7 @@ public class Collector {
         Metric metric = mmap.get(midentifier);
         Dimension dim = new Dimension(dimensionname);
         metric.getDimensions().put(dimensionname, dim);
-        String dimid = midentifier + "." + dimensionname;        
+        String dimid = midentifier + "." + dimensionname;
         return dimid;
     }//EoM
 
