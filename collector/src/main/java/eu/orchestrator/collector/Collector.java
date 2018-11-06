@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  */
 public class Collector {
 
-    private static final Logger logger = Logger.getLogger(Collector.class.getName());
+    //private static final Logger logger = Logger.getLogger(Collector.class.getName());
 
     // static variable single_instance of type Singleton 
     private static Collector collector_instance = null;
@@ -60,10 +60,10 @@ public class Collector {
         int pivot = dimensionid.lastIndexOf(".");
         String metricid = dimensionid.substring(0, pivot);
         String dname = dimensionid.substring(pivot + 1, dimensionid.length());
-        logger.info("metric: " + metricid + " dim:" + dname);
+        //logger.info("metric: " + metricid + " dim:" + dname);
 
         Metric metric = mmap.get(metricid);
-        logger.info(metric.toString());
+        //logger.info(metric.toString());
         Dimension dim = metric.getDimensions().get(dname);
 
 //        Measurement measurement = new Measurement(metricid, dimensionid, value);
