@@ -11,6 +11,13 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>maestro-nexus</id>
+            <url>https://repository.ubitech.eu/repository/maestro-maven-private/</url>
+        </repository>
+    </distributionManagement>
+    
     <build>
         <plugins>
             <plugin>
